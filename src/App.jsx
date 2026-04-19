@@ -43,7 +43,7 @@ function GoogleStars({ rating = 4.6, count = '900+' }) {
 }
 
 /* Individual review card */
-function ReviewCard({ name, date, text, avatar }) {
+function ReviewCard({ name, location, date, text, avatar, highlight }) {
   return (
     <div className="rev-card">
       <div className="rev-head">
@@ -52,6 +52,7 @@ function ReviewCard({ name, date, text, avatar }) {
         </div>
         <div>
           <p className="rev-name">{name}</p>
+          <p className="rev-location">{location}</p>
           <p className="rev-date">{date}</p>
         </div>
         <div className="rev-g">
@@ -61,7 +62,43 @@ function ReviewCard({ name, date, text, avatar }) {
       <div className="rev-stars">
         {[...Array(5)].map((_, i) => <Star key={i} size={12} weight="fill" color="#FBBC05" />)}
       </div>
+      {highlight && <div className="rev-highlight">"{highlight}"</div>}
       <p className="rev-text">{text}</p>
+    </div>
+  )
+}
+
+/* Video testimonial card */
+function VideoCard({ thumb, name, saved, quote }) {
+  const [playing, setPlaying] = useState(false)
+  return (
+    <div className="vid-card" onClick={() => setPlaying(true)}>
+      <div className="vid-thumb">
+        <img src={thumb} alt={name} />
+        {!playing && (
+          <div className="vid-play">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="24" fill="rgba(0,0,0,0.55)" />
+              <polygon points="19,15 37,24 19,33" fill="white" />
+            </svg>
+          </div>
+        )}
+        <div className="vid-badge">
+          <svg width="12" height="12" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="24" fill="white" />
+            <polygon points="19,15 37,24 19,33" fill="#FF0000" />
+          </svg>
+          YouTube
+        </div>
+      </div>
+      <div className="vid-info">
+        <p className="vid-name">{name}</p>
+        <p className="vid-saved">{saved}</p>
+        <p className="vid-quote">"{quote}"</p>
+        <div className="vid-stars">
+          {[...Array(5)].map((_, i) => <Star key={i} size={12} weight="fill" color="#FBBC05" />)}
+        </div>
+      </div>
     </div>
   )
 }
@@ -69,33 +106,101 @@ function ReviewCard({ name, date, text, avatar }) {
 function ReviewsSection() {
   const reviews = [
     {
-      name: 'Jordi M.',
-      date: 'Hace 2 semanas',
-      text: 'Instalación rápida y muy profesional. Ahora pago menos de 10€ al mes de luz. Totalmente recomendable.',
+      name: 'Jordi Mas',
+      location: 'l\'Eixample, Barcelona',
+      date: 'hace 3 semanas',
+      text: 'Llevaba años pagando 180 € al mes de luz. Después de la instalación de Eltex pago 7 €. No me lo podía creer cuando vi la primera factura. El proceso fue transparente desde el primer día, sin sorpresas ni letra pequeña. El técnico llegó puntual, terminó en 6 horas y dejó todo limpio. 100% recomendable.',
       avatar: { letter: 'J', bg: '#4285F4' },
+      highlight: '¡Pasé de 180 € a 7 € al mes!',
     },
     {
-      name: 'Carmen R.',
-      date: 'Hace 1 mes',
-      text: 'Me llamaron puntualmente, explicaron todo sin presión y el resultado ha sido increíble. Muy contenta.',
+      name: 'Carmen Ruiz',
+      location: 'Gràcia, Barcelona',
+      date: 'hace 1 mes',
+      text: 'Al principio tenía dudas, pero la llamada del técnico me convenció: explicaron todo con números reales, sin presión y sin intentar venderme nada que no necesitara. La instalación fue impecable. En el primer mes ya recuperé más de 140 €. Mi vecina ya ha pedido presupuesto también.',
       avatar: { letter: 'C', bg: '#34A853' },
+      highlight: '140 € ahorrados el primer mes',
     },
     {
-      name: 'Antonio V.',
-      date: 'Hace 3 semanas',
-      text: 'Profesionales de verdad. El diagnóstico fue gratuito y me ayudó a entender el ahorro real antes de decidir.',
+      name: 'Antonio Vidal',
+      location: 'Sant Martí, Barcelona',
+      date: 'hace 2 semanas',
+      text: 'El diagnóstico gratuito fue lo que me convenció. Sin compromiso de ningún tipo, me mandaron un informe con el potencial real de mi tejado. El resultado final superó sus propias estimaciones. En verano prácticamente no pago nada y en invierno bajo de 15 €. Ojalá lo hubiera hecho antes.',
       avatar: { letter: 'A', bg: '#EA4335' },
+      highlight: 'El resultado superó las estimaciones',
+    },
+    {
+      name: 'Montserrat P.',
+      location: 'Sarrià, Barcelona',
+      date: 'hace 5 días',
+      text: 'Empresa seria y muy profesional. Tardaron exactamente lo que dijeron, el equipo fue amable y dejaron el tejado perfectamente. Llevo 2 meses con las placas y ya veo el retorno. El acompañamiento post-instalación también es excelente, siempre responden rápido cualquier consulta.',
+      avatar: { letter: 'M', bg: '#FBBC05' },
+      highlight: 'Empresa seria, resultado excelente',
+    },
+    {
+      name: 'Pau Ferrer',
+      location: 'Les Corts, Barcelona',
+      date: 'hace 1 semana',
+      text: 'Me contactaron tras pedir el diagnóstico y en 2 días ya tenía fecha de instalación. El técnico fue muy didáctico, me explicó cómo funciona el sistema de compensación de excedentes y cómo leer la nueva factura. Ahorro entre 120 y 160 € cada mes. Inversión totalmente recuperada en menos de 5 años.',
+      avatar: { letter: 'P', bg: '#4285F4' },
+      highlight: 'Recupero la inversión en menos de 5 años',
+    },
+    {
+      name: 'Rosa Torres',
+      location: 'Horta-Guinardó, Barcelona',
+      date: 'hace 2 meses',
+      text: 'Pedí tres presupuestos distintos y Eltex fue la única empresa que vino a ver el tejado antes de dar cifras. Eso me generó mucha confianza. La instalación fue limpia, rápida y sin obra. Ahora invierto lo que ahorraba en la hipoteca. Mis hijos también se lo están planteando.',
+      avatar: { letter: 'R', bg: '#34A853' },
+      highlight: 'La única empresa que vino a ver el tejado primero',
+    },
+  ]
+
+  const videos = [
+    {
+      thumb: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80&auto=format&fit=crop',
+      name: 'Familia García · Eixample',
+      saved: 'Ahorro anual: 1.380 €',
+      quote: 'En un año amortizamos casi el 20% de la instalación',
+    },
+    {
+      thumb: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80&auto=format&fit=crop',
+      name: 'Miquel & Laia · Sarrià',
+      saved: 'Factura actual: 9 € / mes',
+      quote: 'No creíamos que fuera posible hasta que vimos la factura',
+    },
+    {
+      thumb: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80&auto=format&fit=crop',
+      name: 'Carlos Pujol · Sant Gervasi',
+      saved: 'Reducción del 94 % de la factura',
+      quote: 'El mejor dinero que he invertido en esta casa',
     },
   ]
 
   return (
     <section className="reviews-section">
       <div className="reviews-in">
+        {/* Header */}
         <div className="reviews-header">
           <GoogleStars rating={4.6} count="900+" />
         </div>
+
+        {/* Written reviews */}
         <div className="reviews-grid">
           {reviews.map((r, i) => <ReviewCard key={i} {...r} />)}
+        </div>
+
+        {/* Video testimonials */}
+        <div className="vid-section">
+          <div className="vid-header">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+              <rect width="22" height="16" rx="3.5" fill="#FF0000"/>
+              <polygon points="9,4 17,8 9,12" fill="white"/>
+            </svg>
+            <h3 className="vid-title">Testimonios en vídeo</h3>
+          </div>
+          <div className="vid-grid">
+            {videos.map((v, i) => <VideoCard key={i} {...v} />)}
+          </div>
         </div>
       </div>
     </section>
