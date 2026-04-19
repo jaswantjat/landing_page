@@ -19,9 +19,9 @@ const TARGET = new Date('2026-05-13T23:59:59+02:00').getTime()
 
 // Bill brackets → realistic savings range (conservative / typical)
 const SAVINGS_DATA = {
-  low:  { label: 'Menos de 80 €',     monthly: 65,  savePct: 0.68, annualMin: 480,  annualMax: 560,  paybackYrs: '7–9' },
-  mid:  { label: 'Entre 80 y 160 €',  monthly: 120, savePct: 0.76, annualMin: 900,  annualMax: 1100, paybackYrs: '5–7' },
-  high: { label: 'Más de 160 €',      monthly: 195, savePct: 0.82, annualMin: 1600, annualMax: 2000, paybackYrs: '4–6' },
+  low:  { label: 'Inferior a 100 €',   monthly: 75,  savePct: 0.68, annualMin: 480,  annualMax: 650,  paybackYrs: '7–9' },
+  mid:  { label: 'Entre 100 y 160 €',  monthly: 130, savePct: 0.76, annualMin: 900,  annualMax: 1200, paybackYrs: '5–7' },
+  high: { label: 'Superior a 160 €',   monthly: 195, savePct: 0.82, annualMin: 1600, annualMax: 2000, paybackYrs: '4–6' },
 }
 
 /* ── Google logo ──────────────────────────────────────────────────────── */
@@ -368,6 +368,52 @@ function SavingsCalculator() {
   )
 }
 
+function NeighborMap() {
+  const pins = [
+    { label: 'Valencia 212', x: 28, y: 35 },
+    { label: 'Enric Granados', x: 66, y: 28 },
+    { label: 'Consell de Cent', x: 58, y: 68 },
+    { label: 'Valencia 214', x: 42, y: 52, active: true },
+  ]
+
+  return (
+    <section className="map-section">
+      <div className="map-in">
+        <div className="map-copy">
+          <div className="pill">
+            <MapPin size={13} weight="fill" />
+            Prueba local · l'Eixample
+          </div>
+          <h2 className="map-title">Su manzana ya está en fase de validación energética.</h2>
+          <p className="map-sub">
+            No es una campaña genérica. Estamos revisando tejados concretos alrededor de Carrer de Valencia 214 para confirmar sombras, orientación y subvenciones disponibles.
+          </p>
+          <div className="map-stats">
+            <div><strong>3</strong><span>vecinos pre-calificados</span></div>
+            <div><strong>2/5</strong><span>plazas libres esta semana</span></div>
+          </div>
+        </div>
+        <div className="mini-map" aria-label="Mapa de vecinos cercanos con instalaciones Eltex">
+          <div className="map-grid" />
+          <div className="map-road map-road-a" />
+          <div className="map-road map-road-b" />
+          <div className="map-road map-road-c" />
+          {pins.map(pin => (
+            <div
+              key={pin.label}
+              className={`map-pin${pin.active ? ' active' : ''}`}
+              style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+            >
+              <span />
+              <small>{pin.active ? 'Su tejado' : 'Instalación Eltex finalizada'} · {pin.label}</small>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 /* ── Ask / lead-gen form ─────────────────────────────────────────────── */
 function AskForm({ onSubmit }) {
   const [step, setStep] = useState(1)
@@ -459,13 +505,22 @@ function ThankYou() {
         {[
           'Tenga a mano su última factura de luz.',
           'Reserve 7 minutos para la llamada.',
-          'Revise su email: ya le enviamos un mini-curso gratuito.',
+          'Conteste al 936 258 218: será una validación técnica, no una llamada comercial.',
         ].map((t, i) => (
           <div key={i} className="ty-step">
             <span className="ty-num">{i + 1}</span>
             <span>{t}</span>
           </div>
         ))}
+        <div className="ty-bonus">
+          <div className="ty-bonus-icon">
+            <Sun size={22} weight="fill" />
+          </div>
+          <div>
+            <strong>Mientras espera</strong>
+            <p>Vea el vídeo de 3 minutos sobre cómo l'Eixample se está desconectando de la red y qué datos revisará el técnico en su llamada.</p>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -538,18 +593,23 @@ export default function App() {
               Carrer de Valencia 214 · l'Eixample
             </div>
             <h1 className="h1">
-              Su tejado puede <span className="accent">reducir drásticamente</span> su factura de luz.
+              <span className="h1-local">Carrer de Valencia 214:</span> Informe de Independencia Energética 2026.
             </h1>
             <p className="sub">
-              Estamos validando la eficiencia solar de su manzana. Calcule su ahorro estimado y reciba un diagnóstico técnico gratuito personalizado.
+              Deje de alquilar su energía; empiece a poseerla. Su tejado ha sido pre-calificado mediante satélite y solo faltan 3 validaciones técnicas para activar su Proyección de Ahorro Real.
             </p>
+            <div className="hero-checks">
+              <span><CheckCircle size={15} weight="fill" /> Sombras del Eixample</span>
+              <span><CheckCircle size={15} weight="fill" /> Orientación del tejado</span>
+              <span><CheckCircle size={15} weight="fill" /> Subvenciones activas</span>
+            </div>
             <a href="#form" className="cta lg">
               <Sun size={20} weight="fill" />
-              Quiero Mi Diagnóstico Solar 2026
+              Activar Mi Auditoría Gratuita
             </a>
             <span className="micro">
               <LockSimple size={12} weight="fill" />
-              Gratuito · Sin compromiso · 2 minutos
+              Valor 122 € · Hoy 0 € · llamada técnica de 7 min
             </span>
           </div>
 
@@ -561,7 +621,7 @@ export default function App() {
       <div className="urgency">
         <span className="urg-text">
           <Lightning size={16} weight="fill" color="#EDC645" />
-          Solo <strong>2 plazas</strong> de auditoría esta semana
+          Solo quedan <strong>2 de 5 plazas</strong> de auditoría técnica para l'Eixample esta semana
         </span>
         <div className="timer">
           <T v={d} l="Días" /><T v={h} l="Hrs" /><T v={m} l="Min" /><T v={s} l="Seg" />
@@ -573,6 +633,8 @@ export default function App() {
 
       {/* VALUE STACK */}
       <ValueStack />
+
+      <NeighborMap />
 
       {/* REVIEWS */}
       <ReviewsSection />
