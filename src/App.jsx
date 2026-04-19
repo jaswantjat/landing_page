@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Star, Lightning, MapPin, Sun, CheckCircle, LockSimple,
   PaperPlaneTilt, Coins, Building, PhoneCall, ShieldCheck,
-  CalendarCheck, UserCircle, ArrowRight, SealCheck, SlidersHorizontal,
+  CalendarCheck, SealCheck, SlidersHorizontal,
 } from '@phosphor-icons/react'
 
 const LOGO_URL = 'https://uploads.onecompiler.io/4454edy2w/4454ed8yh/Logo%20negative.png'
@@ -188,12 +188,6 @@ function ReviewsSection() {
   return (
     <section className="reviews-section">
       <div className="reviews-in">
-        <div className="reviews-header">
-          <GoogleStars rating={4.6} count="900+" />
-        </div>
-        <div className="reviews-grid">
-          {reviews.map((r, i) => <ReviewCard key={i} {...r} />)}
-        </div>
         <div className="vid-section">
           <div className="vid-header">
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
@@ -205,6 +199,12 @@ function ReviewsSection() {
           <div className="vid-grid">
             {videos.map((v, i) => <VideoCard key={i} {...v} />)}
           </div>
+        </div>
+        <div className="reviews-header">
+          <GoogleStars rating={4.6} count="900+" />
+        </div>
+        <div className="reviews-grid">
+          {reviews.map((r, i) => <ReviewCard key={i} {...r} />)}
         </div>
       </div>
     </section>
@@ -229,55 +229,6 @@ function T({ v, l }) {
     <div className="tu">
       <span className="tv">{String(v).padStart(2, '0')}</span>
       <span className="tl">{l}</span>
-    </div>
-  )
-}
-
-/* ── Social nudge ─────────────────────────────────────────────────────── */
-const NUDGES = [
-  { name: 'Marta S.', street: 'Carrer de Valencia 212' },
-  { name: 'Jordi P.', street: 'Carrer d\'Enric Granados' },
-  { name: 'Carmen R.', street: 'Carrer del Consell de Cent' },
-]
-
-function Nudge() {
-  const [visible, setVisible] = useState(true)
-  const [idx, setIdx] = useState(0)
-
-  useEffect(() => {
-    let hideTimer
-    let nextTimer
-
-    function cycle() {
-      hideTimer = setTimeout(() => {
-        setVisible(false)
-        nextTimer = setTimeout(() => {
-          setIdx(i => (i + 1) % NUDGES.length)
-          setVisible(true)
-          cycle()
-        }, 1800)
-      }, 5600)
-    }
-
-    cycle()
-
-    return () => {
-      clearTimeout(hideTimer)
-      clearTimeout(nextTimer)
-    }
-  }, [])
-
-  const n = NUDGES[idx]
-
-  return (
-    <div className={`nudge${visible ? ' show' : ''}`} aria-live="polite">
-      <div className="nudge-icon">
-        <UserCircle size={24} weight="fill" />
-      </div>
-      <span>
-        <strong>{n.name}</strong> en <strong>{n.street}</strong> acaba de recibir su diagnóstico
-      </span>
-      <div className="nudge-progress" />
     </div>
   )
 }
@@ -714,8 +665,6 @@ export default function App() {
           </div>
         </div>
       </section>
-
-      <Nudge />
 
       {/* FOOTER */}
       <footer className="footer">
