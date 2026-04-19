@@ -347,7 +347,7 @@ export default function App() {
             <p className="section-sub section-sub--white">
               Un equipo técnico local se encarga de todo: permisos, subvenciones, instalación y seguimiento.
             </p>
-            <a href="#form" className="cta-btn cta-btn--yellow cta-btn--lg" style={{ marginTop: 36, display: 'inline-flex' }}>
+            <a href="#form" className="cta-btn cta-btn--yellow cta-btn--lg" style={{ marginTop: 36 }}>
               <CalendarCheck size={20} weight="fill" />
               Reservar Auditoría Técnica Gratuita
             </a>
