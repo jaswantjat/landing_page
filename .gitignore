@@ -12,9 +12,9 @@ yarn-error.log*
 pnpm-debug.log*
 
 # local env
-.env
-.env.local
-.env.*.local
+# .env # Removed by Orchids to allow .env files
+# .env.local # Removed by Orchids to allow .env files
+# .env.*.local # Removed by Orchids to allow .env files
 
 # editor/system
 .DS_Store
