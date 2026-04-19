@@ -1,0 +1,7 @@
+{
+  "startupCommands": [
+    "echo 'No install step for this deliverable'; echo 'No dev server required for markdown output'"
+  ],
+  "projectId": "5a2e0414-675a-4df2-89d8-b16dce0c1120",
+  "templateId": "any"
+}
