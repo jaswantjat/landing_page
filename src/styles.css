@@ -506,6 +506,7 @@ input { font-family: inherit; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
+  max-width: 800px;
 }
 .vid-card {
   border-radius: 16px;
@@ -519,17 +520,29 @@ input { font-family: inherit; }
 .vid-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
 .vid-thumb {
   position: relative;
-  height: 180px;
+  height: 200px;
   overflow: hidden;
+  background: #000;
 }
 .vid-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.vid-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
 .vid-play {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s;
 }
+.vid-play:hover { transform: scale(1.08); }
 .vid-badge {
   position: absolute;
   top: 10px;
@@ -629,7 +642,7 @@ input { font-family: inherit; }
   .micro     { justify-content: flex-start; }
   .nudge     { left: 24px; right: auto; max-width: 300px; }
   .reviews-grid { grid-template-columns: repeat(2, 1fr); }
-  .vid-grid     { grid-template-columns: repeat(3, 1fr); }
+  .vid-grid     { grid-template-columns: repeat(2, 1fr); }
   .reviews-section { padding: 56px 32px; }
 }
 

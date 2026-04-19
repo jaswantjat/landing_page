@@ -69,27 +69,39 @@ function ReviewCard({ name, location, date, text, avatar, highlight }) {
 }
 
 /* Video testimonial card */
-function VideoCard({ thumb, name, saved, quote }) {
+function VideoCard({ videoId, name, saved, quote }) {
   const [playing, setPlaying] = useState(false)
+  const thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+
   return (
-    <div className="vid-card" onClick={() => setPlaying(true)}>
+    <div className="vid-card">
       <div className="vid-thumb">
-        <img src={thumb} alt={name} />
-        {!playing && (
-          <div className="vid-play">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="24" fill="rgba(0,0,0,0.55)" />
-              <polygon points="19,15 37,24 19,33" fill="white" />
-            </svg>
-          </div>
+        {playing ? (
+          <iframe
+            className="vid-iframe"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+            title={name}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <>
+            <img src={thumb} alt={name} />
+            <button className="vid-play" onClick={() => setPlaying(true)} aria-label="Reproducir vídeo">
+              <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+                <circle cx="28" cy="28" r="28" fill="rgba(0,0,0,0.6)" />
+                <polygon points="22,17 44,28 22,39" fill="white" />
+              </svg>
+            </button>
+            <div className="vid-badge">
+              <svg width="12" height="9" viewBox="0 0 22 16" fill="none">
+                <rect width="22" height="16" rx="3.5" fill="#FF0000"/>
+                <polygon points="9,4 17,8 9,12" fill="white"/>
+              </svg>
+              YouTube
+            </div>
+          </>
         )}
-        <div className="vid-badge">
-          <svg width="12" height="12" viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="24" fill="white" />
-            <polygon points="19,15 37,24 19,33" fill="#FF0000" />
-          </svg>
-          YouTube
-        </div>
       </div>
       <div className="vid-info">
         <p className="vid-name">{name}</p>
@@ -157,22 +169,16 @@ function ReviewsSection() {
 
   const videos = [
     {
-      thumb: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80&auto=format&fit=crop',
-      name: 'Familia García · Eixample',
-      saved: 'Ahorro anual: 1.380 €',
-      quote: 'En un año amortizamos casi el 20% de la instalación',
+      videoId: 'q4P8JVUloww',
+      name: 'Testimonio cliente Eltex',
+      saved: 'Ahorro real verificado',
+      quote: 'La mejor decisión que tomé para mi hogar',
     },
     {
-      thumb: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80&auto=format&fit=crop',
-      name: 'Miquel & Laia · Sarrià',
-      saved: 'Factura actual: 9 € / mes',
-      quote: 'No creíamos que fuera posible hasta que vimos la factura',
-    },
-    {
-      thumb: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80&auto=format&fit=crop',
-      name: 'Carlos Pujol · Sant Gervasi',
-      saved: 'Reducción del 94 % de la factura',
-      quote: 'El mejor dinero que he invertido en esta casa',
+      videoId: 'CTBCxUoVTxM',
+      name: 'Testimonio cliente Eltex',
+      saved: 'Instalación en 1 día',
+      quote: 'Sin obras, sin complicaciones, sin sorpresas',
     },
   ]
 
