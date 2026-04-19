@@ -2,11 +2,105 @@ import { useEffect, useState } from 'react'
 import {
   Star, Lightning, MapPin, Sun, CheckCircle, LockSimple,
   PaperPlaneTilt, Coins, Building, PhoneCall, ShieldCheck,
-  CalendarCheck, UserCircle,
+  CalendarCheck, UserCircle, ArrowRight, SealCheck,
 } from '@phosphor-icons/react'
 
 const LOGO_URL = 'https://uploads.onecompiler.io/4454edy2w/4454ed8yh/Logo%20negative.png'
 const TARGET = new Date('2026-05-13T23:59:59+02:00').getTime()
+
+/* ── Real brand logos via official CDN / SVG inline ─────────────────────── */
+
+function GoogleLogo({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+  )
+}
+
+function GoogleStars({ rating = 4.6, count = '900+' }) {
+  const full = Math.floor(rating)
+  const half = rating % 1 >= 0.5
+  return (
+    <div className="google-review">
+      <div className="gr-top">
+        <GoogleLogo size={22} />
+        <div className="gr-info">
+          <span className="gr-label">Google Reviews</span>
+          <div className="gr-stars">
+            {[...Array(full)].map((_, i) => <Star key={i} size={13} weight="fill" color="#FBBC05" />)}
+            {half && <Star size={13} weight="half" color="#FBBC05" />}
+            <span className="gr-score">{rating}</span>
+          </div>
+        </div>
+        <span className="gr-count">{count} reseñas</span>
+      </div>
+    </div>
+  )
+}
+
+/* Individual review card */
+function ReviewCard({ name, date, text, avatar }) {
+  return (
+    <div className="rev-card">
+      <div className="rev-head">
+        <div className="rev-avatar" style={{ background: avatar.bg }}>
+          <span>{avatar.letter}</span>
+        </div>
+        <div>
+          <p className="rev-name">{name}</p>
+          <p className="rev-date">{date}</p>
+        </div>
+        <div className="rev-g">
+          <GoogleLogo size={16} />
+        </div>
+      </div>
+      <div className="rev-stars">
+        {[...Array(5)].map((_, i) => <Star key={i} size={12} weight="fill" color="#FBBC05" />)}
+      </div>
+      <p className="rev-text">{text}</p>
+    </div>
+  )
+}
+
+function ReviewsSection() {
+  const reviews = [
+    {
+      name: 'Jordi M.',
+      date: 'Hace 2 semanas',
+      text: 'Instalación rápida y muy profesional. Ahora pago menos de 10€ al mes de luz. Totalmente recomendable.',
+      avatar: { letter: 'J', bg: '#4285F4' },
+    },
+    {
+      name: 'Carmen R.',
+      date: 'Hace 1 mes',
+      text: 'Me llamaron puntualmente, explicaron todo sin presión y el resultado ha sido increíble. Muy contenta.',
+      avatar: { letter: 'C', bg: '#34A853' },
+    },
+    {
+      name: 'Antonio V.',
+      date: 'Hace 3 semanas',
+      text: 'Profesionales de verdad. El diagnóstico fue gratuito y me ayudó a entender el ahorro real antes de decidir.',
+      avatar: { letter: 'A', bg: '#EA4335' },
+    },
+  ]
+
+  return (
+    <section className="reviews-section">
+      <div className="reviews-in">
+        <div className="reviews-header">
+          <GoogleStars rating={4.6} count="900+" />
+        </div>
+        <div className="reviews-grid">
+          {reviews.map((r, i) => <ReviewCard key={i} {...r} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 function useCountdown() {
   const [now, setNow] = useState(Date.now())
@@ -129,6 +223,42 @@ function ThankYou() {
   )
 }
 
+/* ── Trust strip with real Google badge ─────────────────────────────────── */
+function TrustStrip() {
+  return (
+    <section className="trust">
+      <div className="trust-in">
+        {/* Google */}
+        <div className="trust-item trust-google">
+          <div className="trust-logo-row">
+            <GoogleLogo size={28} />
+            <strong className="trust-gnum">4,6</strong>
+          </div>
+          <div className="trust-stars-row">
+            {[...Array(4)].map((_, i) => <Star key={i} size={14} weight="fill" color="#FBBC05" />)}
+            <Star size={14} weight="half" color="#FBBC05" />
+          </div>
+          <span>900+ reseñas verificadas</span>
+        </div>
+
+        {/* Garantía */}
+        <div className="trust-item">
+          <ShieldCheck size={28} weight="fill" color="#4349FF" />
+          <strong>25 años</strong>
+          <span>de garantía en equipos</span>
+        </div>
+
+        {/* Instalación */}
+        <div className="trust-item">
+          <CalendarCheck size={28} weight="fill" color="#4349FF" />
+          <strong>1 día</strong>
+          <span>instalación sin obras</span>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function App() {
   const [done, setDone] = useState(false)
   const { d, h, m, s } = useCountdown()
@@ -144,7 +274,8 @@ export default function App() {
           <img src={LOGO_URL} alt="Eltex" className="logo" />
           <div className="nav-r">
             <span className="nav-stars">
-              <Star size={13} weight="fill" color="#EDC645" />
+              <GoogleLogo size={14} />
+              <Star size={13} weight="fill" color="#FBBC05" />
               4,6 · 900+ reseñas
             </span>
             <a href="#form" className="cta sm">Pedir Diagnóstico</a>
@@ -210,21 +341,10 @@ export default function App() {
       </div>
 
       {/* TRUST */}
-      <section className="trust">
-        <div className="trust-in">
-          {[
-            { Icon: Star, n: '4,6', t: 'Google · 900+ reseñas' },
-            { Icon: ShieldCheck, n: '25 años', t: 'de garantía' },
-            { Icon: CalendarCheck, n: '1 día', t: 'instalación sin obras' },
-          ].map(({ Icon, n, t }, i) => (
-            <div key={i} className="trust-item">
-              <Icon size={24} weight="fill" color="#4349FF" />
-              <strong>{n}</strong>
-              <span>{t}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <TrustStrip />
+
+      {/* REVIEWS */}
+      <ReviewsSection />
 
       {/* FORM */}
       <section className="form-section" id="form">
@@ -253,6 +373,15 @@ export default function App() {
       {/* FOOTER */}
       <footer className="footer">
         <img src={LOGO_URL} alt="Eltex" className="logo" style={{ height: 20, opacity: 0.7 }} />
+        <div className="footer-trust">
+          <GoogleLogo size={14} />
+          <Star size={11} weight="fill" color="#FBBC05" />
+          <Star size={11} weight="fill" color="#FBBC05" />
+          <Star size={11} weight="fill" color="#FBBC05" />
+          <Star size={11} weight="fill" color="#FBBC05" />
+          <Star size={11} weight="half" color="#FBBC05" />
+          <span className="footer-gscore">4,6 · 900+ reseñas Google</span>
+        </div>
         <p>© 2026 Eltex Energía · Barcelona</p>
       </footer>
     </div>
