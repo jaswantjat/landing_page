@@ -234,20 +234,72 @@ function T({ v, l }) {
 }
 
 /* ── Social nudge ─────────────────────────────────────────────────────── */
+const NUDGES = [
+  { name: 'Marta S.', street: 'Carrer de Valencia 212' },
+  { name: 'Jordi P.', street: 'Carrer d\'Enric Granados' },
+  { name: 'Carmen R.', street: 'Carrer del Consell de Cent' },
+]
+
 function Nudge() {
   const [show, setShow] = useState(false)
+  const [idx, setIdx] = useState(0)
   useEffect(() => { const t = setTimeout(() => setShow(true), 3000); return () => clearTimeout(t) }, [])
+  useEffect(() => {
+    if (!show) return
+    const t = setInterval(() => setIdx(i => (i + 1) % NUDGES.length), 7000)
+    return () => clearInterval(t)
+  }, [show])
   if (!show) return null
+  const n = NUDGES[idx]
   return (
     <div className="nudge">
       <UserCircle size={24} weight="fill" color="#4349FF" />
-      <span><strong>Marta</strong> de Carrer de Provença acaba de reservar su auditoría</span>
+      <span>Un propietario en <strong>{n.street}</strong> acaba de recibir su diagnóstico</span>
     </div>
   )
 }
 
+/* ── Value Stack ─────────────────────────────────────────────────────── */
+function ValueStack() {
+  const items = [
+    { icon: '🛰️', title: 'Mapeo de Incidencia Solar Satelital', value: '47 €' },
+    { icon: '🏙️', title: 'Análisis de Sombras Dinámico del Eixample', value: '25 €' },
+    { icon: '📋', title: 'Informe de Subvenciones Locales Activas', value: '30 €' },
+    { icon: '📈', title: 'Hoja de Ruta de Amortización Personalizada', value: '20 €' },
+  ]
+  return (
+    <section className="vstack-section">
+      <div className="vstack-in">
+        <div className="vstack-head">
+          <div className="pill"><SealCheck size={13} weight="fill" /> Incluido en su auditoría gratuita</div>
+          <h2 className="vstack-title">Lo que recibe en la llamada de 7 minutos</h2>
+          <p className="vstack-sub">No es una visita comercial. Es un diagnóstico técnico con datos reales de su tejado.</p>
+        </div>
+        <div className="vstack-list">
+          {items.map((item, i) => (
+            <div key={i} className="vstack-item">
+              <span className="vstack-icon">{item.icon}</span>
+              <span className="vstack-label">{item.title}</span>
+              <span className="vstack-val">{item.value}</span>
+            </div>
+          ))}
+          <div className="vstack-total">
+            <span>Valor total</span>
+            <span className="vstack-total-old">122 €</span>
+            <span className="vstack-total-free">0 € hoy</span>
+          </div>
+        </div>
+        <a href="#form" className="cta lg vstack-cta">
+          <Sun size={18} weight="fill" />
+          Activar Mi Auditoría Gratuita
+        </a>
+      </div>
+    </section>
+  )
+}
+
 /* ── Interactive Savings Calculator (hero card) ───────────────────────── */
-function SavingsCalculator({ onBillSelect }) {
+function SavingsCalculator() {
   const [selected, setSelected] = useState(null)
   const brackets = [
     { key: 'low',  ...SAVINGS_DATA.low  },
@@ -259,7 +311,6 @@ function SavingsCalculator({ onBillSelect }) {
 
   function pick(key) {
     setSelected(key)
-    onBillSelect && onBillSelect(key)
   }
 
   return (
@@ -318,44 +369,39 @@ function SavingsCalculator({ onBillSelect }) {
 }
 
 /* ── Ask / lead-gen form ─────────────────────────────────────────────── */
-function AskForm({ onSubmit, billKey }) {
-  const [step, setStep] = useState(billKey ? 2 : 1)
-  const [localBill, setLocalBill] = useState(billKey)
+function AskForm({ onSubmit }) {
+  const [step, setStep] = useState(1)
+  const [billKey, setBillKey] = useState(null)
   const [phone, setPhone] = useState('')
 
-  // If parent already has bill selection skip step 2 silently
-  const next = (key) => {
-    if (key) setLocalBill(key)
-    setStep(s => s + 1)
-  }
-
-  const savings = localBill ? SAVINGS_DATA[localBill] : null
+  const savings = billKey ? SAVINGS_DATA[billKey] : null
+  const pct = step === 1 ? 33 : step === 2 ? 66 : 100
 
   if (step === 1) return (
     <div className="ask">
-      <p className="ask-q">¿Cuál es su prioridad?</p>
-      <button className="opt" onClick={() => next()}>
+      <p className="ask-q">¿Cuál es su prioridad principal?</p>
+      <button className="opt" onClick={() => setStep(2)}>
         <Lightning size={20} weight="fill" color="#4349FF" />
-        Reducir mi factura mensual
+        Eliminar el coste de mi factura de luz
       </button>
-      <button className="opt" onClick={() => next()}>
+      <button className="opt" onClick={() => setStep(2)}>
         <Building size={20} weight="fill" color="#4349FF" />
-        Aumentar el valor de mi propiedad
+        Aumentar el valor patrimonial de mi piso
       </button>
-      <div className="bar-wrap"><div className="bar" style={{ width: '33%' }} /></div>
+      <div className="bar-wrap"><div className="bar" style={{ width: `${pct}%` }} /></div>
     </div>
   )
 
   if (step === 2) return (
     <div className="ask">
-      <p className="ask-q">¿Cuánto paga de luz al mes aproximadamente?</p>
+      <p className="ask-q">¿Su gasto de luz mensual es…?</p>
       {Object.entries(SAVINGS_DATA).map(([key, b]) => (
-        <button key={key} className="opt" onClick={() => next(key)}>
+        <button key={key} className="opt" onClick={() => { setBillKey(key); setStep(3) }}>
           <Coins size={20} weight="fill" color="#4349FF" />
           {b.label}
         </button>
       ))}
-      <div className="bar-wrap"><div className="bar" style={{ width: '66%' }} /></div>
+      <div className="bar-wrap"><div className="bar" style={{ width: `${pct}%` }} /></div>
     </div>
   )
 
@@ -365,17 +411,17 @@ function AskForm({ onSubmit, billKey }) {
         <div className="ask-savings-preview">
           <CheckCircle size={16} weight="fill" color="#10b981" />
           <span>
-            Con su consumo, el ahorro estimado es de{' '}
+            Ahorro estimado para su consumo:{' '}
             <strong>{savings.annualMin.toLocaleString('es-ES')}–{savings.annualMax.toLocaleString('es-ES')} €/año</strong>
           </span>
         </div>
       )}
       <div className="badge">
         <CheckCircle size={20} weight="fill" color="#4349FF" />
-        Su tejado está <strong>pre-calificado</strong>. Último paso:
+        Tejado <strong>pre-calificado</strong>. Último paso:
       </div>
       <p className="ask-sub">
-        Déjenos su teléfono. Un técnico le llama para validar su informe con el potencial exacto de su tejado.
+        Nuestro sistema ha pre-calificado su tejado. Ingrese su teléfono <strong>porque</strong> un experto técnico debe confirmar manualmente los obstáculos de sombra antes de emitir su certificado final. <em>(Llamada técnica de 7 min, no comercial)</em>
       </p>
       <form onSubmit={e => { e.preventDefault(); if (phone.trim().length >= 9) onSubmit() }}>
         <input
@@ -385,14 +431,15 @@ function AskForm({ onSubmit, billKey }) {
           value={phone}
           onChange={e => setPhone(e.target.value)}
           required
+          autoFocus
         />
-        <button type="submit" className="cta full">
+        <button type="submit" className="cta full" disabled={phone.trim().length < 9}>
           <PaperPlaneTilt size={18} weight="fill" />
           Recibir Mi Diagnóstico Gratuito
         </button>
-        <p className="legal">Al enviar, acepta la llamada técnica y el tratamiento de datos según la normativa vigente.</p>
+        <p className="legal">Al enviar, acepta la llamada de validación técnica y el tratamiento de datos según el RGPD.</p>
       </form>
-      <div className="bar-wrap"><div className="bar" style={{ width: '100%' }} /></div>
+      <div className="bar-wrap"><div className="bar" style={{ width: `${pct}%` }} /></div>
     </div>
   )
 }
@@ -460,7 +507,6 @@ function TrustStrip() {
 /* ── App ─────────────────────────────────────────────────────────────── */
 export default function App() {
   const [done, setDone] = useState(false)
-  const [billKey, setBillKey] = useState(null)
   const { d, h, m, s } = useCountdown()
 
   if (done) return <ThankYou />
@@ -507,8 +553,7 @@ export default function App() {
             </span>
           </div>
 
-          {/* Interactive savings calculator replaces static assumptions */}
-          <SavingsCalculator onBillSelect={setBillKey} />
+          <SavingsCalculator />
         </div>
       </section>
 
@@ -525,6 +570,9 @@ export default function App() {
 
       {/* TRUST */}
       <TrustStrip />
+
+      {/* VALUE STACK */}
+      <ValueStack />
 
       {/* REVIEWS */}
       <ReviewsSection />
@@ -546,7 +594,7 @@ export default function App() {
                 <span className="form-card-sm">Llamada técnica de 7 min, no comercial</span>
               </div>
             </div>
-            <AskForm onSubmit={() => setDone(true)} billKey={billKey} />
+            <AskForm onSubmit={() => setDone(true)} />
           </div>
         </div>
       </section>
