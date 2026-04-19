@@ -1,148 +1,140 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const LOGO_URL = 'https://uploads.onecompiler.io/4454edy2w/4454ed8yh/Logo%20negative.png'
+const WA_NUMBER = '34936258218'
+const WA_MSG = encodeURIComponent('Hola, me interesa el diagnóstico solar gratuito para Carrer de Valencia 214.')
 
-const notifications = [
-  { name: 'Marta R.', street: 'Carrer de Provença', action: 'acaba de reservar su Auditoría Solar.' },
-  { name: 'Jordi M.', street: 'Diputació 189', action: 'acaba de solicitar su Informe 2026.' },
-  { name: 'Laura V.', street: 'Consell de Cent', action: 'acaba de activar su Diagnóstico Solar.' },
-  { name: 'Pere B.', street: 'Balmes 102', action: 'acaba de completar su estudio técnico.' },
+const timeSlots = [
+  { id: 'morning', main: 'Mañana', sub: '9:00 – 13:00' },
+  { id: 'afternoon', main: 'Tarde', sub: '15:00 – 19:00' },
+  { id: 'tomorrow', main: 'Mañana (día)', sub: 'Próximo laborable' },
+  { id: 'anytime', main: 'Cuando sea', sub: 'Lo antes posible' },
 ]
 
-const reviews = [
-  { name: 'Ana R.', neighborhood: "L'Eixample", stars: 5, text: 'Proceso completamente técnico, sin presión comercial. El informe de sombras fue revelador.' },
-  { name: 'Marc B.', neighborhood: "L'Eixample", stars: 5, text: 'Detectaron un problema de sombras que nadie nos había explicado. Ahorramos un 30% más gracias a eso.' },
-  { name: 'Carme V.', neighborhood: "L'Eixample", stars: 5, text: 'Nos guiaron con subvenciones del barrio paso a paso. Conseguimos el máximo de ayudas disponibles.' },
+const details = [
+  { label: 'Tu tejado', value: 'Apto para solar ✓', green: true },
+  { label: 'Retorno estimado', value: '~5 años', green: true },
+  { label: 'Instalación', value: 'En 1 día, sin obras' },
+  { label: 'Tu gestor personal', value: 'De inicio a fin' },
+  { label: 'Permisos y subvenciones', value: 'Nos encargamos de todo' },
+  { label: 'Garantía', value: '25 años' },
 ]
 
-const deliverables = [
-  { icon: '🛰️', title: 'Mapeo de Incidencia Solar', desc: 'Análisis satelital de la orientación e irradiación real de su tejado.' },
-  { icon: '🏙️', title: 'Análisis de Sombras', desc: 'Impacto de los edificios del Eixample sobre su producción estimada.' },
-  { icon: '📋', title: 'Roadmap de Subvenciones', desc: 'Ayudas locales, autonómicas y estatales activas este mes.' },
-  { icon: '💶', title: 'Informe de Coste Oculto', desc: 'Cuánto pagará de más en energía alquilada los próximos 10 años.' },
-]
-
-const stats = [
-  { value: '3.000+', label: 'Instalaciones en España' },
-  { value: '4,6★', label: 'Google (900+ reseñas)' },
-  { value: '30 años', label: 'Garantía de producto' },
-  { value: '90%', label: 'Ahorro máximo potencial' },
-]
-
-const TARGET_DATE = new Date('2026-05-13T23:59:59+02:00').getTime()
-
-function formatTime(ms) {
-  const safe = Math.max(ms, 0)
-  const totalSeconds = Math.floor(safe / 1000)
-  const days = Math.floor(totalSeconds / (24 * 3600))
-  const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  return { days, hours, minutes, seconds }
-}
-
-function StarRating({ count = 5 }) {
+// ── Illustrated roof map ────────────────────────────────────────────
+function RoofMap() {
   return (
-    <span className="stars" aria-label={`${count} estrellas`}>
-      {'★'.repeat(count)}{'☆'.repeat(5 - count)}
-    </span>
-  )
-}
-
-function ProgressBar({ step }) {
-  return (
-    <div className="progress-bar" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={3}>
-      {[1, 2, 3].map((n) => (
-        <div key={n} className={`progress-step ${n <= step ? 'active' : ''} ${n === step ? 'current' : ''}`} />
+    <div className="roof-map" aria-hidden="true">
+      {/* streets */}
+      <div className="st sth" style={{ top: 128 }} />
+      <div className="st stv" style={{ left: 140 }} />
+      {/* generic blocks */}
+      {[
+        { t: 18, l: 8,   w: 58, h: 36 },
+        { t: 28, l: 90,  w: 50, h: 30 },
+        { t: 55, l: 225, w: 70, h: 42 },
+        { t: 148, l: 4,  w: 54, h: 34 },
+        { t: 158, l: 228,w: 64, h: 38 },
+        { t: 234, l: 16, w: 58, h: 36 },
+        { t: 228, l: 178,w: 72, h: 42 },
+      ].map((b, i) => (
+        <div key={i} className="block" style={{ top: b.t, left: b.l, width: b.w, height: b.h }} />
       ))}
+
+      {/* Neighbour — already installed */}
+      <div className="nb-roof" style={{ top: 18, left: 8 }}>
+        <div className="nb-tag">Ya instalado ✓</div>
+        <div className="panel-grid nb-panels">
+          {Array(8).fill(0).map((_, i) => <div key={i} className="panel nb-panel" />)}
+        </div>
+      </div>
+
+      {/* YOUR roof — highlighted */}
+      <div className="my-roof" style={{ top: 143, left: 108 }}>
+        <div className="my-tag">Tu tejado<span className="my-tag-arrow" /></div>
+        <div className="panel-grid my-panels">
+          {Array(15).fill(0).map((_, i) => <div key={i} className="panel my-panel" />)}
+        </div>
+      </div>
     </div>
   )
 }
 
-function App() {
-  const [step, setStep] = useState(1)
-  const [priority, setPriority] = useState('')
-  const [billRange, setBillRange] = useState('')
+// ── Timer digit ─────────────────────────────────────────────────────
+function TimerUnit({ val, label }) {
+  return (
+    <div className="timer-unit">
+      <span className="timer-val">{String(val).padStart(2, '0')}</span>
+      <span className="timer-lbl">{label}</span>
+    </div>
+  )
+}
+
+export default function App() {
   const [phone, setPhone] = useState('')
-  const [name, setName] = useState('')
+  const [slot, setSlot] = useState('morning')
   const [submitted, setSubmitted] = useState(false)
   const [now, setNow] = useState(Date.now())
-  const [notifIndex, setNotifIndex] = useState(0)
-  const [notifVisible, setNotifVisible] = useState(true)
-  const [heroVisible, setHeroVisible] = useState(false)
 
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+  const TARGET = new Date('2026-05-13T23:59:59+02:00').getTime()
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t) }, [])
+  const diff = Math.max(TARGET - now, 0)
+  const days    = Math.floor(diff / 86400000)
+  const hours   = Math.floor((diff % 86400000) / 3600000)
+  const minutes = Math.floor((diff % 3600000) / 60000)
+  const seconds = Math.floor((diff % 60000) / 1000)
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setHeroVisible(true), 100)
-    return () => clearTimeout(timeout)
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNotifVisible(false)
-      setTimeout(() => {
-        setNotifIndex((prev) => (prev + 1) % notifications.length)
-        setNotifVisible(true)
-      }, 400)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const timeLeft = useMemo(() => formatTime(TARGET_DATE - now), [now])
-  const canSubmit = phone.trim().length >= 9 && name.trim().length >= 2
-
-  const handleStepOne = (value) => { setPriority(value); setStep(2) }
-  const handleStepTwo = (value) => { setBillRange(value); setStep(3) }
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!priority || !billRange || !canSubmit) return
+    if (phone.trim().length < 9) return
     setSubmitted(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   if (submitted) {
     return (
-      <div className="app">
-        <nav className="navbar">
-          <img src={LOGO_URL} alt="Eltex Energía" className="nav-logo" />
-        </nav>
-        <div className="thankyou-page">
-          <div className="thankyou-card">
-            <div className="ty-icon">✅</div>
-            <div className="eyebrow-pill blue">Diagnóstico Solar 2026</div>
-            <h1 className="ty-title">Estudio iniciado, {name.split(' ')[0]}.</h1>
-            <p className="ty-sub">
-              Un Experto Energético le llamará desde el <strong>936 258 218</strong> mañana entre las <strong>10:00 y las 14:00</strong> para completar su diagnóstico personalizado.
-            </p>
-            <div className="ty-steps">
-              {[
-                'Tenga a mano su última factura de luz.',
-                'Reserve 7 minutos para la llamada técnica.',
-                'Revise su email para el mini-curso gratuito.',
-              ].map((item, i) => (
-                <div key={i} className="ty-step-item">
-                  <span className="ty-step-num">{i + 1}</span>
-                  <span>{item}</span>
+      <div className="bg-page">
+        <div className="phone-wrap">
+          <div className="screen ty-screen">
+            <nav className="ty-nav">
+              <img src={LOGO_URL} alt="Eltex" className="ty-logo" />
+            </nav>
+            <div className="ty-body">
+              <div className="ty-check">✅</div>
+              <h1 className="ty-title">¡Listo! Te llamamos pronto.</h1>
+              <p className="ty-sub">
+                Recibirás una llamada de validación técnica de <strong>7 minutos</strong>.
+                No es una visita comercial.
+              </p>
+              <div className="ty-steps">
+                {[
+                  'Ten a mano tu última factura de luz.',
+                  'Reserva 7 min para la llamada técnica.',
+                  'Revisa tu email para el mini-curso gratuito.',
+                ].map((s, i) => (
+                  <div key={i} className="ty-step">
+                    <span className="ty-num">{i + 1}</span>
+                    <span>{s}</span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="wa-btn"
+              >
+                <span className="wa-icon-wrap">
+                  <WaIcon />
+                </span>
+                <div>
+                  <div className="wa-main">¿Prefieres WhatsApp?</div>
+                  <div className="wa-sub-text">Respuesta en menos de 1 hora</div>
                 </div>
-              ))}
+              </a>
+              <div className="trust-line">
+                <span className="stars">★★★★★</span>
+                Empresa local · Barcelona · 3.500+ instalaciones
+              </div>
             </div>
-          </div>
-          <div className="ty-bonus-card">
-            <div className="eyebrow-pill">Mini-curso gratuito · 3 vídeos</div>
-            <h2>Incluido con su diagnóstico</h2>
-            <ul className="bonus-list">
-              {[
-                'Errores comunes antes de instalar solar en fincas urbanas.',
-                'Cómo leer su factura para detectar el coste oculto.',
-                'Cómo aprovechar subvenciones sin perder los plazos.',
-              ].map((item, i) => (
-                <li key={i}><span className="check">✓</span>{item}</li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>
@@ -150,256 +142,148 @@ function App() {
   }
 
   return (
-    <div className="app">
-      {/* Top announcement bar */}
-      <div className="announcement-bar">
-        <span>🏆 Partner oficial de Starlink en España</span>
-        <span className="sep">·</span>
-        <span>+3.000 instalaciones realizadas</span>
-      </div>
+    <div className="bg-page">
+      <div className="phone-wrap">
+        <div className="screen">
 
-      {/* Navbar */}
-      <nav className="navbar">
-        <img src={LOGO_URL} alt="Eltex Energía" className="nav-logo" />
-        <a href="#diagnostico" className="nav-cta">Solicita tu estudio gratuito →</a>
-      </nav>
-
-      {/* Hero */}
-      <header className={`hero ${heroVisible ? 'hero-visible' : ''}`}>
-        <div className="hero-bg-dots" aria-hidden="true" />
-        <div className="hero-inner">
-          <div className="google-badge">
-            <span className="g-icon">G</span>
-            <div>
-              <div className="g-stars">★★★★★ <span className="g-score">4,6/5</span></div>
-              <div className="g-count">más de +875 reseñas</div>
+          {/* ── HERO ── */}
+          <div className="hero">
+            <RoofMap />
+            {/* top bar */}
+            <div className="hero-top">
+              <img src={LOGO_URL} alt="Eltex" className="hero-logo" />
+              <span className="hero-badge">Tu proyecto solar</span>
+            </div>
+            {/* bottom address */}
+            <div className="hero-bottom">
+              <div className="hero-addr">Carrer de Valencia 214</div>
+              <div className="hero-addr-sub">08011 Barcelona · l'Eixample</div>
             </div>
           </div>
-          <h1>Cómo independizar su hogar de las subidas eléctricas sin cambiar su estilo de vida.</h1>
-          <p className="hero-lead">
-            Hacemos este mapeo porque estamos validando la eficiencia técnica de su manzana <strong>tras una instalación cercana en l'Eixample.</strong>
-          </p>
-          <div className="hero-bullets">
-            {[
-              'Ahorra hasta un 90% en tu factura de la luz',
-              'Más de 3.000 instalaciones en toda España',
-              'Un Account Manager de principio a fin',
-            ].map((b, i) => (
-              <div key={i} className="hero-bullet"><span className="bullet-check">✓</span>{b}</div>
-            ))}
-          </div>
-          <a href="#diagnostico" className="btn-primary hero-btn">
-            Quiero mi Diagnóstico Solar 2026 →
-          </a>
-          <p className="hero-note">Gratuito · Sin compromiso · Validación técnica en 2 min</p>
-        </div>
-        <div className="hero-image-panel" aria-hidden="true">
-          <div className="hero-img-overlay" />
-        </div>
-      </header>
 
-      {/* Live notification toast */}
-      <div className={`toast-notif ${notifVisible ? 'toast-visible' : 'toast-hidden'}`} aria-live="polite">
-        <span className="toast-dot" />
-        <span><strong>{notifications[notifIndex].name}</strong> · {notifications[notifIndex].street} — {notifications[notifIndex].action}</span>
-      </div>
+          {/* ── CONTENT ── */}
+          <div className="content">
 
-      {/* Trust logos */}
-      <section className="trust-section">
-        <p className="trust-label">Con la confianza de los líderes del sector</p>
-        <div className="trust-logos">
-          {['//ABANCA', 'cetelem', 'Sófinco', 'PYLONTECH', 'JinKO Solar', 'Hisense'].map((name) => (
-            <span key={name} className="trust-logo-item">{name}</span>
-          ))}
-        </div>
-      </section>
+            {/* Savings card */}
+            <div className="sav-card">
+              <div className="sav-left">
+                <div className="sav-label">Tu ahorro anual</div>
+                <div className="sav-num">1.140 €</div>
+                <div className="sav-footnote">28.500 € en 25 años</div>
+              </div>
+              <div className="sav-right">
+                <div className="sav-per">Tu factura</div>
+                <div className="sav-before">~95 €</div>
+                <div className="sav-after">~8 €</div>
+                <div className="sav-per">/ mes</div>
+              </div>
+            </div>
 
-      {/* Urgency / Scarcity */}
-      <section className="urgency-section">
-        <div className="urgency-inner">
-          <div className="urgency-left">
-            <span className="urgency-badge">⚡ Solo 2 plazas restantes</span>
-            <h2>Auditoría técnica para l'Eixample — esta semana</h2>
-            <p>Cada semana validamos un número limitado de tejados en el barrio. No pierda su turno.</p>
-            <a href="#diagnostico" className="btn-primary">Reservar mi plaza gratuita →</a>
-          </div>
-          <div className="urgency-right">
-            <p className="timer-label">Oferta válida hasta el 13 de mayo</p>
-            <div className="timer">
-              {[
-                { v: timeLeft.days, l: 'Días' },
-                { v: timeLeft.hours, l: 'Horas' },
-                { v: timeLeft.minutes, l: 'Min' },
-                { v: timeLeft.seconds, l: 'Seg' },
-              ].map(({ v, l }) => (
-                <div key={l} className="timer-unit">
-                  <span className="timer-val">{String(v).padStart(2, '0')}</span>
-                  <span className="timer-lbl">{l}</span>
+            {/* Countdown */}
+            <div className="countdown-strip">
+              <span className="countdown-label">⚡ Oferta válida hasta el 13 de mayo</span>
+              <div className="timer">
+                <TimerUnit val={days} label="Días" />
+                <TimerUnit val={hours} label="Hrs" />
+                <TimerUnit val={minutes} label="Min" />
+                <TimerUnit val={seconds} label="Seg" />
+              </div>
+            </div>
+
+            {/* Detail rows */}
+            <div className="sec-title">Tu instalación con Eltex</div>
+            <div className="details-card">
+              {details.map((d) => (
+                <div key={d.label} className="d-row">
+                  <span className="d-label">{d.label}</span>
+                  <span className={`d-value${d.green ? ' green' : ''}`}>{d.value}</span>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* What you get */}
-      <section className="deliverables-section">
-        <div className="section-inner">
-          <div className="eyebrow-pill blue">Roadmap de Eficiencia Solar 2026</div>
-          <h2>No es una llamada comercial.<br />Es un informe técnico personalizado.</h2>
-          <p className="section-sub">Analizamos el potencial real de su tejado y su ahorro proyectado con datos reales de su zona.</p>
-          <div className="deliverables-grid">
-            {deliverables.map((d) => (
-              <div key={d.title} className="deliverable-card">
-                <span className="deliverable-icon">{d.icon}</span>
+            {/* CTA section */}
+            <div className="cta-section">
+              <div className="cta-title">¿Quieres los números exactos?</div>
+              <div className="cta-sub">Esto es una estimación. Podemos darte los datos reales de tu tejado.</div>
+
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="wa-btn"
+              >
+                <span className="wa-icon-wrap">
+                  <WaIcon />
+                </span>
                 <div>
-                  <h3>{d.title}</h3>
-                  <p>{d.desc}</p>
+                  <div className="wa-main">Escríbenos por WhatsApp</div>
+                  <div className="wa-sub-text">Respuesta en menos de 1 hora</div>
                 </div>
+              </a>
+
+              {/* OR */}
+              <div className="or-divider">
+                <div className="or-line" />
+                <span className="or-text">o</span>
+                <div className="or-line" />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Stats bar */}
-      <section className="stats-section">
-        {stats.map((s) => (
-          <div key={s.label} className="stat-item">
-            <span className="stat-value">{s.value}</span>
-            <span className="stat-label">{s.label}</span>
-          </div>
-        ))}
-      </section>
+              {/* Callback form */}
+              <div className="callback-card">
+                <div className="cb-title">Te llamamos nosotros</div>
+                <div className="cb-sub">Déjanos tu número y te contactamos cuando prefieras.</div>
 
-      {/* Social proof */}
-      <section className="proof-section">
-        <div className="section-inner">
-          <div className="eyebrow-pill">Propietarios en Barcelona</div>
-          <h2>3.000+ vecinos ya iniciaron su transición energética</h2>
-          <div className="reviews-grid">
-            {reviews.map((r) => (
-              <article key={r.name} className="review-card">
-                <StarRating count={r.stars} />
-                <p className="review-text">"{r.text}"</p>
-                <div className="review-author">
-                  <div className="review-avatar">{r.name[0]}</div>
-                  <div>
-                    <strong>{r.name}</strong>
-                    <span>{r.neighborhood}</span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Lead capture form */}
-      <section id="diagnostico" className="form-section">
-        <div className="section-inner">
-          <div className="form-card">
-            <div className="eyebrow-pill blue">Carrer de Valencia 214 · l'Eixample</div>
-            <h2>Reserve su Auditoría Técnica Gratuita</h2>
-            <p className="form-sub">Su tejado ha sido pre-calificado para el programa de validación 2026.</p>
-
-            <ProgressBar step={step} />
-            <p className="step-label">Paso {step} de 3</p>
-
-            <form onSubmit={handleSubmit}>
-              {step === 1 && (
-                <div className="form-step">
-                  <h3>¿Cuál es su prioridad principal ahora?</h3>
-                  {[
-                    { v: 'factura', label: 'Reducir mi factura mensual de luz', icon: '💡' },
-                    { v: 'patrimonio', label: 'Aumentar el valor patrimonial de mi propiedad', icon: '🏠' },
-                  ].map(({ v, label, icon }) => (
-                    <button
-                      key={v}
-                      type="button"
-                      className={`option-btn ${priority === v ? 'selected' : ''}`}
-                      onClick={() => handleStepOne(v)}
-                    >
-                      <span className="opt-icon">{icon}</span>
-                      <span>{label}</span>
-                      <span className="opt-arrow">→</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {step === 2 && (
-                <div className="form-step">
-                  <h3>¿Cuál es su gasto de luz promedio mensual?</h3>
-                  {[
-                    { v: '<100', label: 'Menos de 100 €/mes', icon: '🟢' },
-                    { v: '100-200', label: 'Entre 100 y 200 €/mes', icon: '🟡' },
-                    { v: '>200', label: 'Más de 200 €/mes', icon: '🔴' },
-                  ].map(({ v, label, icon }) => (
-                    <button
-                      key={v}
-                      type="button"
-                      className={`option-btn ${billRange === v ? 'selected' : ''}`}
-                      onClick={() => handleStepTwo(v)}
-                    >
-                      <span className="opt-icon">{icon}</span>
-                      <span>{label}</span>
-                      <span className="opt-arrow">→</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="form-step">
-                  <div className="pre-qualified-badge">🎯 Tejado pre-calificado</div>
-                  <h3>Ingrese sus datos para recibir el informe</h3>
-                  <p className="form-step-sub">Una llamada de validación técnica de 7 minutos, no comercial.</p>
-
+                <form onSubmit={handleSubmit}>
                   <div className="input-group">
-                    <label htmlFor="nombre">Nombre</label>
+                    <div className="input-label">Tu teléfono</div>
                     <input
-                      id="nombre"
-                      type="text"
-                      placeholder="Su nombre"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="telefono">Teléfono</label>
-                    <input
-                      id="telefono"
                       type="tel"
-                      placeholder="Ej: 612 345 678"
+                      className="input-field"
+                      placeholder="612 345 678"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
                     />
                   </div>
 
-                  <button type="submit" className="btn-primary submit-btn" disabled={!canSubmit}>
-                    Finalizar y Recibir Mi Diagnóstico →
-                  </button>
-                  <p className="legal">
-                    Al enviar acepta la llamada de validación técnica y el tratamiento de datos conforme al RGPD.
-                  </p>
-                </div>
-              )}
-            </form>
+                  <div className="time-label">¿Cuándo te va bien?</div>
+                  <div className="time-grid">
+                    {timeSlots.map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        className={`time-btn${slot === s.id ? ' selected' : ''}`}
+                        onClick={() => setSlot(s.id)}
+                      >
+                        <div className="time-main">{s.main}</div>
+                        <div className="time-sub-text">{s.sub}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button type="submit" className="submit-btn">Llamadme →</button>
+                </form>
+              </div>
+            </div>
+
+            {/* Trust footer */}
+            <div className="trust-footer">
+              <span className="stars">★★★★★</span>
+              Empresa local · Barcelona · 3.500+ instalaciones
+            </div>
+
           </div>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="footer">
-        <img src={LOGO_URL} alt="Eltex Energía" className="footer-logo" />
-        <p>Solicitud de auditoría técnica solar — Carrer de Valencia 214, l'Eixample, Barcelona.</p>
-        <p className="footer-legal">© 2026 Eltex Energía · Todos los derechos reservados · Política de privacidad</p>
-      </footer>
+      </div>
     </div>
   )
 }
 
-export default App
+function WaIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  )
+}

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tu proyecto solar — Eltex</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #A9A49C;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  /* Phone mockup */
+  .phone {
+    width: 390px;
+    background: #0A0A0A;
+    border-radius: 44px;
+    padding: 14px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+  }
+
+  .screen {
+    background: #FAFAF8;
+    border-radius: 32px;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 820px;
+  }
+
+  /* ═══ HERO ═══ */
+  .hero {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(ellipse at 30% 35%, #5A7A52 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, #4A6E44 0%, transparent 40%),
+      #3E6537;
+    position: relative;
+  }
+
+  .h-st { position: absolute; background: #787868; }
+  .h-sth { height: 10px; width: 120%; left: -10%; }
+  .h-stv { width: 10px; height: 120%; top: -10%; }
+  .hs1 { top: 120px; transform: rotate(-3deg); }
+  .hs2 { left: 135px; transform: rotate(-3deg); }
+
+  .h-bl { position: absolute; border: 1px solid rgba(0,0,0,0.08); transform: rotate(-3deg); }
+  .hb1 { width: 55px; height: 34px; top: 22px; left: 10px; background: #CEBEA2; }
+  .hb2 { width: 48px; height: 30px; top: 32px; left: 88px; background: #C4B496; }
+  .hb3 { width: 68px; height: 40px; top: 58px; left: 220px; background: #CCBC9E; }
+  .hb4 { width: 52px; height: 32px; top: 142px; left: 6px; background: #C0AE90; }
+  .hb5 { width: 62px; height: 36px; top: 155px; left: 225px; background: #C8B89A; }
+  .hb6 { width: 56px; height: 34px; top: 230px; left: 18px; background: #CABB9F; }
+  .hb7 { width: 70px; height: 40px; top: 225px; left: 175px; background: #C2B294; }
+
+  /* Neighbour roof */
+  .h-nb {
+    position: absolute;
+    width: 55px; height: 34px;
+    top: 22px; left: 10px;
+    transform: rotate(-3deg);
+    background: #CEBEA2;
+    z-index: 2;
+  }
+
+  .h-nb-panels {
+    position: absolute;
+    top: 4px; left: 4px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1px; width: 36px; height: 16px;
+  }
+
+  .h-nb-pn { background: linear-gradient(135deg, #1A365D, #2563EB); border: 0.5px solid rgba(100,170,240,0.3); opacity: 0.8; }
+
+  .h-nb-tag {
+    position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    background: #16A34A; color: #fff;
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 6.5px;
+    padding: 2px 6px; border-radius: 2px; white-space: nowrap; z-index: 4;
+  }
+
+  /* Your roof */
+  .h-mr {
+    position: absolute;
+    width: 88px; height: 52px;
+    top: 140px; left: 105px;
+    transform: rotate(-3deg);
+    background: #D8C8AD;
+    border: 2.5px solid #FF5722;
+    border-radius: 2px;
+    box-shadow: 0 0 0 4px rgba(255,87,34,0.2), 0 0 20px rgba(255,87,34,0.15);
+    z-index: 3;
+  }
+
+  .h-mr-tag {
+    position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+    background: #FF5722; color: #fff;
+    font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 8px;
+    padding: 3px 8px; border-radius: 3px;
+    letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; z-index: 4;
+  }
+
+  .h-mr-tag::after {
+    content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #FF5722;
+  }
+
+  .h-panels {
+    position: absolute; top: 6px; left: 6px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1.5px; width: 58px; height: 30px;
+  }
+
+  .h-pn { background: linear-gradient(135deg, #1A365D, #2B6CB0); border: 0.5px solid rgba(100,170,240,0.3); }
+
+  /* Hero overlays */
+  .hero-top {
+    position: absolute; top: 0; left: 0; right: 0;
+    padding: 16px 18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 100%);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .hero-logo { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 16px; color: #fff; }
+
+  .hero-badge {
+    font-size: 8px; color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+    padding: 4px 10px; border-radius: 20px; font-weight: 600;
+  }
+
+  .hero-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.75));
+    padding: 24px 18px 14px;
+  }
+
+  .hero-addr { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; color: #fff; }
+  .hero-addr-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  /* ═══ CONTENT ═══ */
+  .content { padding: 0 18px 20px; }
+
+  /* Savings highlight */
+  .sav-hero {
+    background: #0A0A0A;
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin: -28px 0 20px;
+    position: relative;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sav-hero-left {}
+  .sav-hero-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 4px; }
+  .sav-hero-num { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 36px; color: #4ADE80; line-height: 1; }
+  .sav-hero-sub { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+  .sav-hero-right { text-align: right; }
+  .sav-hero-before { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; color: rgba(255,255,255,0.3); text-decoration: line-through; text-decoration-color: #DC2626; text-decoration-thickness: 2px; }
+  .sav-hero-after { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 22px; color: #4ADE80; margin-top: 2px; }
+  .sav-hero-per { font-size: 10px; color: rgba(255,255,255,0.3); }
+
+  /* Section title */
+  .sec-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: #0A0A0A;
+    margin-bottom: 12px;
+    margin-top: 22px;
+  }
+
+  /* Detail rows */
+  .details {
+    background: #fff;
+    border-radius: 14px;
+    padding: 4px 16px;
+    border: 1px solid #EEECE6;
+  }
+
+  .d-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #F5F3F0;
+  }
+
+  .d-row:last-child { border-bottom: none; }
+
+  .d-label { font-size: 13px; color: #888; }
+  .d-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 13px; color: #0A0A0A; }
+  .d-value.green { color: #16A34A; }
+
+  /* ═══ CTA SECTION ═══ */
+  .cta-section {
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid #EEECE6;
+  }
+
+  .cta-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: #0A0A0A;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .cta-subtitle {
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  /* WhatsApp button */
+  .wa-btn {
+    background: #25D366;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform 0.15s;
+    margin-bottom: 12px;
+  }
+
+  .wa-btn:active { transform: scale(0.98); }
+
+  .wa-icon {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .wa-text { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; color: #fff; }
+  .wa-sub { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  /* OR divider */
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .or-line { flex: 1; height: 1px; background: #E8E8E2; }
+  .or-text { font-size: 11px; color: #bbb; font-weight: 600; }
+
+  /* Callback form */
+  .callback-card {
+    background: #fff;
+    border: 1.5px solid #E8E8E2;
+    border-radius: 16px;
+    padding: 22px 20px;
+  }
+
+  .callback-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #0A0A0A;
+    margin-bottom: 4px;
+  }
+
+  .callback-sub {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  /* Input field */
+  .input-group { margin-bottom: 14px; }
+
+  .input-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    margin-bottom: 6px;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #E8E8E2;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0A0A0A;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #FAFAF8;
+  }
+
+  .input-field:focus { border-color: #FF5722; }
+  .input-field::placeholder { color: #D0D0D0; font-weight: 500; }
+
+  /* Time picker */
+  .time-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    margin-bottom: 8px;
+  }
+
+  .time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .time-btn {
+    padding: 12px;
+    border: 1.5px solid #E8E8E2;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fff;
+  }
+
+  .time-btn:active { transform: scale(0.97); }
+
+  .time-btn.selected {
+    border-color: #FF5722;
+    background: #FFF7ED;
+  }
+
+  .time-btn-main {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #0A0A0A;
+  }
+
+  .time-btn.selected .time-btn-main { color: #FF5722; }
+
+  .time-btn-sub {
+    font-size: 9px;
+    color: #bbb;
+    margin-top: 2px;
+  }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #0A0A0A;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .submit-btn:active { transform: scale(0.98); }
+
+  /* Trust footer */
+  .trust {
+    text-align: center;
+    padding: 18px 0 8px;
+    margin-top: 20px;
+    border-top: 1px solid #F0F0F0;
+  }
+
+  .trust-line { font-size: 10px; color: #bbb; }
+  .trust-stars { color: #FACC15; font-size: 12px; margin-right: 3px; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+<div class="screen">
+
+  <!-- ═══ HERO: their roof ═══ -->
+  <div class="hero">
+    <div class="hero-bg">
+      <div class="h-st h-sth hs1"></div>
+      <div class="h-st h-stv hs2"></div>
+      <div class="h-bl hb2"></div><div class="h-bl hb3"></div><div class="h-bl hb4"></div>
+      <div class="h-bl hb5"></div><div class="h-bl hb6"></div><div class="h-bl hb7"></div>
+
+      <!-- Neighbour's roof -->
+      <div class="h-nb">
+        <div class="h-nb-tag">Ya instalado ✓</div>
+        <div class="h-nb-panels">
+          <div class="h-nb-pn"></div><div class="h-nb-pn"></div><div class="h-nb-pn"></div><div class="h-nb-pn"></div>
+          <div class="h-nb-pn"></div><div class="h-nb-pn"></div><div class="h-nb-pn"></div><div class="h-nb-pn"></div>
+        </div>
+      </div>
+
+      <!-- Their roof -->
+      <div class="h-mr">
+        <div class="h-mr-tag">Tu tejado</div>
+        <div class="h-panels">
+          <div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div>
+          <div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div>
+          <div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div><div class="h-pn"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-top">
+      <div class="hero-logo">eltex</div>
+      <div class="hero-badge">Tu proyecto solar</div>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="hero-addr">Carrer de Valencia 214</div>
+      <div class="hero-addr-sub">08011 Barcelona</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ SAVINGS HERO ═══ -->
+    <div class="sav-hero">
+      <div class="sav-hero-left">
+        <div class="sav-hero-label">Tu ahorro anual</div>
+        <div class="sav-hero-num">1.140 €</div>
+        <div class="sav-hero-sub">28.500 € en 25 años</div>
+      </div>
+      <div class="sav-hero-right">
+        <div class="sav-hero-per">Tu factura</div>
+        <div class="sav-hero-before">~95 €</div>
+        <div class="sav-hero-after">~8 €</div>
+        <div class="sav-hero-per">/ mes</div>
+      </div>
+    </div>
+
+    <!-- ═══ WHY ELTEX ═══ -->
+    <div class="sec-title">Tu instalación con Eltex</div>
+    <div class="details">
+      <div class="d-row">
+        <span class="d-label">Tu tejado</span>
+        <span class="d-value green">Apto para solar ✓</span>
+      </div>
+      <div class="d-row">
+        <span class="d-label">Retorno estimado</span>
+        <span class="d-value green">~5 años</span>
+      </div>
+      <div class="d-row">
+        <span class="d-label">Instalación</span>
+        <span class="d-value">En 1 día, sin obras</span>
+      </div>
+      <div class="d-row">
+        <span class="d-label">Tu gestor personal</span>
+        <span class="d-value">Te acompaña de inicio a fin</span>
+      </div>
+      <div class="d-row">
+        <span class="d-label">Permisos y subvenciones</span>
+        <span class="d-value">Nos encargamos de todo</span>
+      </div>
+      <div class="d-row">
+        <span class="d-label">Garantía</span>
+        <span class="d-value">25 años</span>
+      </div>
+    </div>
+
+    <!-- ═══ CTA SECTION ═══ -->
+    <div class="cta-section">
+      <div class="cta-title">¿Quieres tu estudio real?</div>
+      <div class="cta-subtitle">Estos números son una estimación. Podemos darte los exactos.</div>
+
+      <!-- WhatsApp: instant -->
+      <div class="wa-btn">
+        <div class="wa-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </div>
+        <div>
+          <div class="wa-text">Escríbenos por WhatsApp</div>
+          <div class="wa-sub">Respuesta en menos de 1 hora</div>
+        </div>
+      </div>
+
+      <!-- OR -->
+      <div class="or-divider">
+        <div class="or-line"></div>
+        <div class="or-text">o</div>
+        <div class="or-line"></div>
+      </div>
+
+      <!-- Callback form -->
+      <div class="callback-card">
+        <div class="callback-title">Te llamamos nosotros</div>
+        <div class="callback-sub">Déjanos tu número y te contactamos cuando prefieras.</div>
+
+        <div class="input-group">
+          <div class="input-label">Tu teléfono</div>
+          <input type="tel" class="input-field" placeholder="612 345 678">
+        </div>
+
+        <div class="time-label">¿Cuándo te va bien?</div>
+        <div class="time-grid">
+          <div class="time-btn selected">
+            <div class="time-btn-main">Mañana</div>
+            <div class="time-btn-sub">9:00 – 13:00</div>
+          </div>
+          <div class="time-btn">
+            <div class="time-btn-main">Tarde</div>
+            <div class="time-btn-sub">15:00 – 19:00</div>
+          </div>
+          <div class="time-btn">
+            <div class="time-btn-main">Mañana (día)</div>
+            <div class="time-btn-sub">Próximo día laborable</div>
+          </div>
+          <div class="time-btn">
+            <div class="time-btn-main">Cuando sea</div>
+            <div class="time-btn-sub">Lo antes posible</div>
+          </div>
+        </div>
+
+        <button class="submit-btn">Llamadme →</button>
+      </div>
+    </div>
+
+    <!-- Trust -->
+    <div class="trust">
+      <div class="trust-line">
+        <span class="trust-stars">★★★★★</span>
+        Empresa local · Barcelona · 3.500+ instalaciones
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>
