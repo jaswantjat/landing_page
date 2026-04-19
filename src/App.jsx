@@ -241,20 +241,43 @@ const NUDGES = [
 ]
 
 function Nudge() {
-  const [show, setShow] = useState(false)
+  const [visible, setVisible] = useState(true)
   const [idx, setIdx] = useState(0)
-  useEffect(() => { const t = setTimeout(() => setShow(true), 3000); return () => clearTimeout(t) }, [])
+
   useEffect(() => {
-    if (!show) return
-    const t = setInterval(() => setIdx(i => (i + 1) % NUDGES.length), 7000)
-    return () => clearInterval(t)
-  }, [show])
-  if (!show) return null
+    let hideTimer
+    let nextTimer
+
+    function cycle() {
+      hideTimer = setTimeout(() => {
+        setVisible(false)
+        nextTimer = setTimeout(() => {
+          setIdx(i => (i + 1) % NUDGES.length)
+          setVisible(true)
+          cycle()
+        }, 1800)
+      }, 5600)
+    }
+
+    cycle()
+
+    return () => {
+      clearTimeout(hideTimer)
+      clearTimeout(nextTimer)
+    }
+  }, [])
+
   const n = NUDGES[idx]
+
   return (
-    <div className="nudge">
-      <UserCircle size={24} weight="fill" color="#4349FF" />
-      <span>Un propietario en <strong>{n.street}</strong> acaba de recibir su diagnóstico</span>
+    <div className={`nudge${visible ? ' show' : ''}`} aria-live="polite">
+      <div className="nudge-icon">
+        <UserCircle size={24} weight="fill" />
+      </div>
+      <span>
+        <strong>{n.name}</strong> en <strong>{n.street}</strong> acaba de recibir su diagnóstico
+      </span>
+      <div className="nudge-progress" />
     </div>
   )
 }

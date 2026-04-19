@@ -339,22 +339,62 @@ input { font-family: inherit; }
   bottom: 16px;
   left: 12px;
   right: 12px;
-  z-index: 999;
+  z-index: 1000;
   background: var(--white);
   border: 1px solid var(--border);
   border-left: 3px solid var(--blue);
   border-radius: 12px;
-  padding: 11px 14px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 13px;
+  line-height: 1.35;
   box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-  animation: slideUp 0.35s ease;
+  transform: translateY(18px);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+.nudge.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.nudge-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: var(--blue-lt);
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.nudge span {
+  flex: 1;
+}
+.nudge-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.nudge.show .nudge-progress {
+  animation: nudgeProgress 5.6s linear forwards;
 }
 @keyframes slideUp {
   from { transform: translateY(10px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes nudgeProgress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
 
 /* ── THANK YOU ──────────────────────────── */
