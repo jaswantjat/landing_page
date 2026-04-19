@@ -84,7 +84,7 @@ function ReviewCard({ name, location, date, text, avatar, highlight }) {
 }
 
 /* ── Video testimonial card ─────────────────────────────────────────── */
-function VideoCard({ videoId, name, saved, quote }) {
+function VideoCard({ videoId, name }) {
   const [playing, setPlaying] = useState(false)
   const thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
 
@@ -120,8 +120,6 @@ function VideoCard({ videoId, name, saved, quote }) {
       </div>
       <div className="vid-info">
         <p className="vid-name">{name}</p>
-        <p className="vid-saved">{saved}</p>
-        <p className="vid-quote">"{quote}"</p>
         <div className="vid-stars">
           {[...Array(5)].map((_, i) => <Star key={i} size={12} weight="fill" color="#FBBC05" />)}
         </div>
@@ -183,18 +181,8 @@ function ReviewsSection() {
   ]
 
   const videos = [
-    {
-      videoId: 'q4P8JVUloww',
-      name: 'Testimonio cliente Eltex',
-      saved: 'Ahorro real verificado',
-      quote: 'La mejor decisión que tomé para mi hogar',
-    },
-    {
-      videoId: 'CTBCxUoVTxM',
-      name: 'Testimonio cliente Eltex',
-      saved: 'Sin obras ni complicaciones',
-      quote: 'Sin obras, sin complicaciones, sin sorpresas',
-    },
+    { videoId: 'q4P8JVUloww', name: 'Antonio' },
+    { videoId: 'CTBCxUoVTxM', name: 'Manel' },
   ]
 
   return (
