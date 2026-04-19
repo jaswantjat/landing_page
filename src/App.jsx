@@ -391,6 +391,33 @@ function SavingsCalculator() {
   )
 }
 
+function HouseScanCard() {
+  return (
+    <div className="house-scan" aria-label="Vista satelital pre-calificada de Carrer de Valencia 214">
+      <div className="house-scan-top">
+        <span className="scan-dot" />
+        <span>Tejado detectado · Carrer de Valencia 214</span>
+      </div>
+      <div className="roof-visual">
+        <div className="roof-block roof-main" />
+        <div className="roof-block roof-side" />
+        <div className="roof-panel panel-a" />
+        <div className="roof-panel panel-b" />
+        <div className="roof-panel panel-c" />
+        <div className="scan-crosshair" />
+        <div className="sun-path" />
+      </div>
+      <div className="house-scan-bottom">
+        <div>
+          <strong>Pre-calificado por satélite</strong>
+          <span>3 validaciones técnicas pendientes</span>
+        </div>
+        <div className="scan-score">87%</div>
+      </div>
+    </div>
+  )
+}
+
 function NeighborMap() {
   const pins = [
     { label: 'Valencia 212', x: 28, y: 35 },
@@ -610,6 +637,8 @@ export default function App() {
       {/* HERO */}
       <section className="hero">
         <div className="hero-in">
+          <HouseScanCard />
+
           <div className="hero-txt">
             <div className="pill">
               <MapPin size={13} weight="fill" />
@@ -635,8 +664,6 @@ export default function App() {
               Valor 122 € · Hoy 0 € · llamada técnica de 7 min
             </span>
           </div>
-
-          <SavingsCalculator />
         </div>
       </section>
 
@@ -650,6 +677,10 @@ export default function App() {
           <T v={d} l="Días" /><T v={h} l="Hrs" /><T v={m} l="Min" /><T v={s} l="Seg" />
         </div>
       </div>
+
+      <section className="calc-section">
+        <SavingsCalculator />
+      </section>
 
       {/* TRUST */}
       <TrustStrip />
